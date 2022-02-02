@@ -16,7 +16,7 @@ The [redBlackTree_debug.hpp](redBlackTree_debug.hpp) helps generating a .dot fil
 
 ### Ressources:
 
-[This](https://www.youtube.com/watch?v=qvZGUFHWChY&list=PL9xmBV_5YoZNqDI8qfOZgzbqahCUmUEin) excellent YouTube playlist about Red Blac Trees and insertions.
-[This](https://www.geeksforgeeks.org/red-black-tree-set-3-delete-2/) Geeks for Geeks article for deletions.
-[My implementation](https://www.github.com/backslash-zero/42-ft_containers) within ft_containers project at 42.
-[https://graphviz.org/](https://graphviz.org/) for DOT language help.
+- [This](https://www.youtube.com/watch?v=qvZGUFHWChY&list=PL9xmBV_5YoZNqDI8qfOZgzbqahCUmUEin) excellent YouTube playlist about Red Blac Trees and insertions.
+- [This](https://www.geeksforgeeks.org/red-black-tree-set-3-delete-2/) Geeks for Geeks article for deletions.
+- [My implementation](https://www.github.com/backslash-zero/42-ft_containers) within ft_containers project at 42.
+- [https://graphviz.org/](https://graphviz.org/) for DOT language help.
