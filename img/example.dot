@@ -1,0 +1,83 @@
+digraph graphname {
+	
+	label = "end_add_15"
+	_root[ shape = house ]
+	_root ->"[42][lol]"[ color = green ]
+	"[18][bee]"								[ fontcolor=red1, fillcolor=firebrick4, style=filled ]
+	"[18][bee]"		->	{NULL_18_left, NULL_18_right}
+	NULL_18_left[ shape=plaintext label = "NULL" fontcolor=slategray4 ]
+	NULL_18_right[ shape=plaintext label = "NULL" fontcolor=slategray4 ]
+
+	"[18][bee]" -> "[21][fizz]"[ style=dashed, color=grey ]
+	"[21][fizz]"								[ fontcolor=white fillcolor=black  style=filled]
+	"[21][fizz]"		->	{"[18][bee]", "[23][coconut]"}
+
+	"[21][fizz]" -> "[25][funny]"[ style=dashed, color=grey ]
+	"[23][coconut]"								[ fontcolor=red1, fillcolor=firebrick4, style=filled ]
+	"[23][coconut]"		->	{NULL_23_left, NULL_23_right}
+	NULL_23_left[ shape=plaintext label = "NULL" fontcolor=slategray4 ]
+	NULL_23_right[ shape=plaintext label = "NULL" fontcolor=slategray4 ]
+
+	"[23][coconut]" -> "[21][fizz]"[ style=dashed, color=grey ]
+	"[25][funny]"								[ fontcolor=red1, fillcolor=firebrick4, style=filled ]
+	"[25][funny]"		->	{"[21][fizz]", "[30][buzz]"}
+
+	"[25][funny]" -> "[42][lol]"[ style=dashed, color=grey ]
+	"[28][diary]"								[ fontcolor=red1, fillcolor=firebrick4, style=filled ]
+	"[28][diary]"		->	{NULL_28_left, NULL_28_right}
+	NULL_28_left[ shape=plaintext label = "NULL" fontcolor=slategray4 ]
+	NULL_28_right[ shape=plaintext label = "NULL" fontcolor=slategray4 ]
+
+	"[28][diary]" -> "[30][buzz]"[ style=dashed, color=grey ]
+	"[30][buzz]"								[ fontcolor=white fillcolor=black  style=filled]
+	"[30][buzz]"		->	{"[28][diary]", "[35][fiesta]"}
+
+	"[30][buzz]" -> "[25][funny]"[ style=dashed, color=grey ]
+	"[35][fiesta]"								[ fontcolor=red1, fillcolor=firebrick4, style=filled ]
+	"[35][fiesta]"		->	{NULL_35_left, NULL_35_right}
+	NULL_35_left[ shape=plaintext label = "NULL" fontcolor=slategray4 ]
+	NULL_35_right[ shape=plaintext label = "NULL" fontcolor=slategray4 ]
+
+	"[35][fiesta]" -> "[30][buzz]"[ style=dashed, color=grey ]
+	"[42][lol]"								[ fontcolor=white fillcolor=black  style=filled]
+	"[42][lol]"		->	{"[25][funny]", "[50][mdr]"}
+
+	"[44][hello]"								[ fontcolor=red1, fillcolor=firebrick4, style=filled ]
+	"[44][hello]"		->	{NULL_44_left, NULL_44_right}
+	NULL_44_left[ shape=plaintext label = "NULL" fontcolor=slategray4 ]
+	NULL_44_right[ shape=plaintext label = "NULL" fontcolor=slategray4 ]
+
+	"[44][hello]" -> "[46][bunny]"[ style=dashed, color=grey ]
+	"[46][bunny]"								[ fontcolor=white fillcolor=black  style=filled]
+	"[46][bunny]"		->	{"[44][hello]", "[48][world]"}
+
+	"[46][bunny]" -> "[50][mdr]"[ style=dashed, color=grey ]
+	"[48][world]"								[ fontcolor=red1, fillcolor=firebrick4, style=filled ]
+	"[48][world]"		->	{NULL_48_left, NULL_48_right}
+	NULL_48_left[ shape=plaintext label = "NULL" fontcolor=slategray4 ]
+	NULL_48_right[ shape=plaintext label = "NULL" fontcolor=slategray4 ]
+
+	"[48][world]" -> "[46][bunny]"[ style=dashed, color=grey ]
+	"[50][mdr]"								[ fontcolor=red1, fillcolor=firebrick4, style=filled ]
+	"[50][mdr]"		->	{"[46][bunny]", "[55][fuzzy]"}
+
+	"[50][mdr]" -> "[42][lol]"[ style=dashed, color=grey ]
+	"[53][this is a test]"								[ fontcolor=red1, fillcolor=firebrick4, style=filled ]
+	"[53][this is a test]"		->	{NULL_53_left, NULL_53_right}
+	NULL_53_left[ shape=plaintext label = "NULL" fontcolor=slategray4 ]
+	NULL_53_right[ shape=plaintext label = "NULL" fontcolor=slategray4 ]
+
+	"[53][this is a test]" -> "[55][fuzzy]"[ style=dashed, color=grey ]
+	"[55][fuzzy]"								[ fontcolor=white fillcolor=black  style=filled]
+	"[55][fuzzy]"		->	{"[53][this is a test]", "[80][]"}
+
+	"[55][fuzzy]" -> "[50][mdr]"[ style=dashed, color=grey ]
+	"[80][]"								[ fontcolor=red1, fillcolor=firebrick4, style=filled ]
+	"[80][]"		->	{NULL_80_left, _end}
+	NULL_80_left[ shape=plaintext label = "NULL" fontcolor=slategray4 ]
+
+	"[80][]" -> "[55][fuzzy]"[ style=dashed, color=grey ]
+	_ghost_node[ shape = house ]
+	_end[ color = grey, fontcolor = grey]
+_ghost_node	->	_end[ color = green ]
+}
