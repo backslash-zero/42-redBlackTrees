@@ -3,8 +3,10 @@
 #include <iostream>
 #include <string>
 
-#include "node.hpp"
-#include "pair.hpp"
+#include "_redBlackTree.hpp"
+
+#include "../commons/commons.hpp"
+#include "../tools/tools.hpp"
 
 /* 	Every node has a colour either red or black.
  *		- The root of the tree is always black.
@@ -24,33 +26,38 @@
 
 namespace ft
 {
-
-	void _redBlackTree_rootInsert(node_type *newNode)
+	template <class node_type, class value_compare>
+	void redBlackTree<node_type, value_compare>::_redBlackTree_rootInsert(node_type *newNode)
 	{
 		this->_root = newNode;
 		newNode->right = this->_ghost_node;
 		_ghost_node->parent = newNode;
 	}
 
-	void _redBlackTree_simpleInsert(node_type *newNode)
+	template <class node_type, class value_compare>
+	void redBlackTree<node_type, value_compare>::_redBlackTree_LastElementInsert(node_type *newNode)
+	{
+		this->_ghost_node->parent->right = newNode;
+		newNode->parent = this->_ghost_node->parent;
+		newNode->right = _ghost_node;
+		newNode->left = NULL;
+		_ghost_node->parent = newNode;
+	}
+
+	template <class node_type, class value_compare>
+	void redBlackTree<node_type, value_compare>::_redBlackTree_simpleInsert(node_type *newNode)
 	{
 		if (this->_size == 0)
 			_redBlackTree_rootInsert(newNode);
 		else
 		{
-			iterator lowerBound = (this->lower_bound(newNode->data.first));
-			node_type *lowerBoundNode = lowerBound.node_ptr();
 
 			// case last element
-			if (lowerBoundNode == this->_ghost_node)
-			{
-				lowerBoundNode->parent->right = newNode;
-				newNode->parent = lowerBoundNode->parent;
-				newNode->right = _ghost_node;
-				_ghost_node->parent = newNode;
-			}
+			if (this->_redBlackTree_checkLastNode(newNode))
+				_redBlackTree_LastElementInsert(newNode);
 			else // all other cases
 			{
+				node_type *lowerBoundNode = (this->lower_bound(newNode)).node_ptr();
 				if (lowerBoundNode->left == NULL)
 				{
 					lowerBoundNode->left = newNode;
@@ -66,22 +73,23 @@ namespace ft
 		}
 	}
 
-	void _redBlackTree_add(node_type *newNode)
+	template <class node_type, class value_compare>
+	node_type *redBlackTree<node_type, value_compare>::redBlackTree_add(node_type *newNode)
 	{
 		// New Node already created when pointer passed.
 		// 1. Insert node and color it RED
-
 		_redBlackTree_simpleInsert(newNode);
-		newNode->setColor(RED);
+		newNode->_color = RED;
 
 		// Scenario 1: node is root
 		if (this->_root == newNode)
-			newNode->setColor(BLACK);
-		else
+			newNode->_color = BLACK;
+		else if (this->_redBlackTree_violation_redParent_redChild(newNode)) // checking if theres a problem with inserted node.
 			_redBlackTree_fix(newNode);
-		if (this->_root->getColor() == RED)
-			this->_root->setColor(BLACK);
+		if (this->_root->_color == RED)
+			this->_root->_color = BLACK;
 		this->_size++;
-		// _redBlackTree_debug_printDotTree("end_add");
+		return (newNode);
+		//_redBlackTree_debug_printDotTree("add");
 	}
 };

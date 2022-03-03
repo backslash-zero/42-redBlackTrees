@@ -1,11 +1,13 @@
-
 #pragma once
 
 #include <iostream>
 #include <string>
 
-#include "node.hpp"
-#include "pair.hpp"
+#include "_redBlackTree.hpp"
+
+#include "../commons/commons.hpp"
+#include "../tools/tools.hpp"
+#include "../redBlackTree/_redBlackTree.hpp"
 
 /*	RED BLACK TREE RULES
  * 	Every node has a colour either red or black.
@@ -19,15 +21,15 @@
 
 namespace ft
 {
-
-	bool _redBlackTree_markDoubleBlack(node_type *v_deleted, node_type *u_replacer)
+	template <class node_type, class value_compare>
+	bool redBlackTree<node_type, value_compare>::_redBlackTree_markDoubleBlack(node_type *v_deleted, node_type *u_replacer)
 	{
 		// Case 1: either V or U is red
 		if (_redBlackTree_oneRed(v_deleted, u_replacer))
 		{
 			// mark childen as black
 			if (u_replacer)
-				u_replacer->setColor(BLACK);
+				u_replacer->_color = BLACK;
 			return (false);
 		}
 		else
@@ -44,17 +46,21 @@ namespace ft
 		}
 	}
 
-	void _redBlackTree_simpleRemove_bothParent(node_type *node)
+	template <class node_type, class value_compare>
+	void redBlackTree<node_type, value_compare>::_redBlackTree_simpleRemove_bothParent(node_type *node)
 	{
 		// We can either use predecessor or [successor]
 		node_type *tmp(_redBlackTree_inOrderSuccessor(node));
-		node->data = tmp->data;
-		// ??? Do we need to also assign color: node->setColor(tmp->getColor());
-		_redBlackTree_simpleRemove(tmp);
+		// node->data = tmp->data;
+		_redBlackTree_replaceNode(tmp, node, true);
+		// ??? Do we need to also assign color: node->_color = tmp->_color;
+
+		_redBlackTree_simpleRemove(node);
 		return;
 	}
 
-	void _redBlackTree_simpleRemove_singleParent(node_type *node)
+	template <class node_type, class value_compare>
+	void redBlackTree<node_type, value_compare>::_redBlackTree_simpleRemove_singleParent(node_type *node)
 	{
 		bool doubleBlack;
 		bool parentRelationship = RIGHT;
@@ -66,26 +72,40 @@ namespace ft
 		else
 			tmp = node->right;
 		doubleBlack = _redBlackTree_markDoubleBlack(node, tmp);
-		node->data = tmp->data;
-		this->_redBlackTree_copyNode(node, tmp, false); // copy, so no need to reassign pointers of sister nodes
+		_redBlackTree_replaceNode(tmp, node, true);
+
+		// Detaching deletable node from the rest of the tree
+		if (_redBlackTree_relationshipFinder(node->parent, node) == LEFT)
+			node->parent->left = NULL;
+		else
+			node->parent->right = NULL;
+
+		if (this->_size == 2)
+		{
+			node->parent->left = NULL;
+			node->parent->right = NULL;
+		}
+
 		if (doubleBlack)
 		{
-			if (node->parent)
+			if (tmp->parent)
 			{
-				if (node->parent->left == node)
+				if (tmp->parent->left == tmp)
 					parentRelationship = LEFT;
 				else
 					parentRelationship = RIGHT;
 			}
-			_redBlackTree_fixDoubleBlack(node, node->parent, parentRelationship);
+			_redBlackTree_fixDoubleBlack(tmp, tmp->parent, parentRelationship);
 		}
 		else
-			node->setColor(BLACK);
-		delete tmp;
+			tmp->_color = BLACK;
+		delete node;
 	}
 
-	void _redBlackTree_simpleRemove_leaf(node_type *node)
+	template <class node_type, class value_compare>
+	void redBlackTree<node_type, value_compare>::_redBlackTree_simpleRemove_leaf(node_type *node)
 	{
+
 		bool doubleBlack = false;
 		bool parentRelationship;
 		node_type *parent = node->parent;
@@ -99,13 +119,13 @@ namespace ft
 		// Checking if double black will be created
 		if (node)
 		{
-			if (node->getColor() == BLACK)
+			if (node->_color == BLACK)
 			{
 				doubleBlack = true;
 			}
 		}
 		// Fixing Parent relationship
-		if (parent->left == node)
+		if (_redBlackTree_relationshipFinder(parent, node) == LEFT)
 		{
 			parent->left = NULL;
 			parentRelationship = LEFT;
@@ -122,7 +142,8 @@ namespace ft
 		delete node;
 	}
 
-	void _redBlackTree_simpleRemove(node_type *node)
+	template <class node_type, class value_compare>
+	void redBlackTree<node_type, value_compare>::_redBlackTree_simpleRemove(node_type *node)
 	{
 		if (_redBlackTree_isLeaf(node)) // Case 1 : node deleted is a leaf, even if its the last element (and node->right points to _ghost_node)
 			_redBlackTree_simpleRemove_leaf(node);
@@ -132,12 +153,13 @@ namespace ft
 			_redBlackTree_simpleRemove_bothParent(node);
 	}
 
-	void _redBlackTree_erase(node_type *node)
+	template <class node_type, class value_compare>
+	void redBlackTree<node_type, value_compare>::redBlackTree_erase(node_type *node)
 	{
+
 		_redBlackTree_detachGhost(); // detach ghost node so we don't have to deal with it :)
 		_redBlackTree_simpleRemove(node);
 		this->_size--;
 		_redBlackTree_reassignGhost();
-		// _redBlackTree_debug_printDotTree("ERASE");
 	}
 };

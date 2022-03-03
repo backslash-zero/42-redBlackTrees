@@ -3,47 +3,55 @@
 #include <iostream>
 #include <string>
 
-#include "node.hpp"
-#include "pair.hpp"
+#include "_redBlackTree.hpp"
+
+#include "../commons/commons.hpp"
+#include "../tools/tools.hpp"
 
 namespace ft
 {
 
-	//
-	// bool	_redBlackTree_violation_redRoot(node_type *node)
+	// template <class node_type, class value_compare>
+	// bool	redBlackTree<node_type, value_compare>::_redBlackTree_violation_redRoot(node_type *node)
 	// {
 	// 	if
 	// }
 
-	bool _redBlackTree_violation_redParent_redChild(node_type *newNode)
+	template <class node_type, class value_compare>
+	bool redBlackTree<node_type, value_compare>::_redBlackTree_violation_redParent_redChild(node_type *newNode)
 	{
 
-		if ((newNode->getColor() == RED) && newNode->parent)
+		if ((newNode->_color == RED) && newNode->parent)
 		{
-			if (newNode->parent->getColor() == RED)
+			if (newNode->parent->_color == RED)
 				return (true);
 		}
 		return (false);
 	}
 
-	void _redBlackTree_fix(node_type *newNode)
+	template <class node_type, class value_compare>
+	void redBlackTree<node_type, value_compare>::_redBlackTree_fix(node_type *newNode)
 	{
 		// Check if violation
-		node_type *node_check = newNode;
-		node_type *former_parent = newNode->parent;
-		while (node_check)
+		bool previous_ok = false; // allows to skip scanning whole tree if 2 consecutive nodes are fine
+		while (newNode)
 		{
-			// _redBlackTree_debug_printDotTree();
-
-			former_parent = node_check->parent;
-			if (this->_redBlackTree_violation_redParent_redChild(node_check) == true)
-				this->_redBlackTree_fix_rearrange(node_check);
-
-			node_check = former_parent;
+			if (this->_redBlackTree_violation_redParent_redChild(newNode) == true)
+			{
+				this->_redBlackTree_fix_rearrange(newNode);
+				previous_ok = false;
+			}
+			else
+			{
+				if (previous_ok == true)
+					return;
+				previous_ok = true;
+			}
+			newNode = newNode->parent;
 		}
 	}
-
-	void _redBlackTree_fix_rearrange(node_type *node)
+	template <class node_type, class value_compare>
+	void redBlackTree<node_type, value_compare>::_redBlackTree_fix_rearrange(node_type *node)
 	{
 
 		node_type *grandParent = this->_redBlackTree_getGrandParent(node);
@@ -52,11 +60,11 @@ namespace ft
 		if (uncle)
 		{
 			// Recolor parent, grandparent and uncle:
-			if (uncle->getColor() == RED) // Scenario 2: uncle is RED
+			if (uncle->_color == RED) // Scenario 2: uncle is RED
 			{
-				node->parent->setColor(BLACK);
-				uncle->setColor(BLACK);
-				grandParent->setColor(RED);
+				node->parent->_color = BLACK;
+				uncle->_color = BLACK;
+				grandParent->_color = RED;
 
 				return;
 			}
@@ -76,8 +84,8 @@ namespace ft
 			else // right direction
 				this->_redBlackTree_rotate_left(grandParent);
 
-			node->parent->setColor(BLACK); // newNode->parent still points to the same since we rotate the grandParent
-			grandParent->setColor(RED);	   // grandParent still points to former grand parent
+			node->parent->_color = BLACK; // newNode->parent still points to the same since we rotate the grandParent
+			grandParent->_color = RED;	  // grandParent still points to former grand parent
 		}
 	}
 };

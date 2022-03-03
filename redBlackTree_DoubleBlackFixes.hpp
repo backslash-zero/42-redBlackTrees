@@ -3,8 +3,10 @@
 #include <iostream>
 #include <string>
 
-#include "node.hpp"
-#include "pair.hpp"
+#include "_redBlackTree.hpp"
+
+#include "../commons/commons.hpp"
+#include "../tools/tools.hpp"
 
 /*	RED BLACK TREE RULES
  * 	Every node has a colour either red or black.
@@ -18,8 +20,8 @@
 
 namespace ft
 {
-
-	void _redBlackTree_fixDoubleBlack(node_type *u_doubleBlack, node_type *doubleBlackParent, bool parentRelationship)
+	template <class node_type, class value_compare>
+	void redBlackTree<node_type, value_compare>::_redBlackTree_fixDoubleBlack(node_type *u_doubleBlack, node_type *doubleBlackParent, bool parentRelationship)
 	{
 		/***********
 		 *	3 cases:
@@ -39,7 +41,7 @@ namespace ft
 				if (doubleBlackParent->right)
 				{
 					sibling = doubleBlackParent->right;
-					siblingColor = doubleBlackParent->right->getColor();
+					siblingColor = doubleBlackParent->right->_color;
 					if (_redBlackTree_oneRed(doubleBlackParent->right->left, doubleBlackParent->right->right))
 					{
 						oneSiblingChildrenIsRed = true;
@@ -52,7 +54,7 @@ namespace ft
 				if (doubleBlackParent->left)
 				{
 					sibling = doubleBlackParent->left;
-					siblingColor = doubleBlackParent->left->getColor();
+					siblingColor = doubleBlackParent->left->_color;
 					if (_redBlackTree_oneRed(doubleBlackParent->left->left, doubleBlackParent->left->right))
 					{
 						oneSiblingChildrenIsRed = true;
@@ -63,7 +65,7 @@ namespace ft
 		}
 		if (this->_root == u_doubleBlack)
 		{
-			u_doubleBlack->setColor(BLACK); // Black height of complete tree reduces by 1
+			u_doubleBlack->_color = BLACK; // Black height of complete tree reduces by 1
 			return;
 		}
 		else if (siblingColor == BLACK && oneSiblingChildrenIsRed == true)
@@ -71,10 +73,10 @@ namespace ft
 			// Left Left Case
 			if (parentRelationship != LEFT && redSiblingSide == LEFT)
 			{
-				sibling->setColor(doubleBlackParent->getColor());
-				doubleBlackParent->setColor(BLACK);
+				sibling->_color = doubleBlackParent->_color;
+				doubleBlackParent->_color = BLACK;
 				_redBlackTree_rotate_right(doubleBlackParent);
-				sibling->left->setColor(BLACK);
+				sibling->left->_color = BLACK;
 			}
 
 			// Left Right Case
@@ -82,17 +84,17 @@ namespace ft
 			{
 				_redBlackTree_rotate_left(sibling);
 				_redBlackTree_rotate_right(doubleBlackParent);
-				sibling->setColor(BLACK);
-				sibling->parent->setColor(BLACK);
+				sibling->_color = BLACK;
+				sibling->parent->_color = BLACK;
 			}
 
 			// Right Right Case
 			if (parentRelationship != RIGHT && redSiblingSide == RIGHT)
 			{
-				sibling->setColor(doubleBlackParent->getColor());
-				doubleBlackParent->setColor(BLACK);
+				sibling->_color = doubleBlackParent->_color;
+				doubleBlackParent->_color = BLACK;
 				_redBlackTree_rotate_left(doubleBlackParent);
-				sibling->right->setColor(BLACK);
+				sibling->right->_color = BLACK;
 			}
 
 			// Right Left Case
@@ -100,29 +102,29 @@ namespace ft
 			{
 				_redBlackTree_rotate_right(sibling);
 				_redBlackTree_rotate_left(doubleBlackParent);
-				sibling->setColor(BLACK);
-				sibling->parent->setColor(BLACK);
+				sibling->_color = BLACK;
+				sibling->parent->_color = BLACK;
 			}
 		}
 		else if (siblingColor == BLACK && oneSiblingChildrenIsRed == false)
 		{
-			sibling->setColor(RED);
-			if (doubleBlackParent->getColor() == RED)
+			sibling->_color = RED;
+			if (doubleBlackParent->_color == RED)
 			{
-				doubleBlackParent->setColor(BLACK);
+				doubleBlackParent->_color = BLACK;
 				return;
 			}
 
-			bool parentGrandParentRelationship;
+			bool parentGrandParentRelationship = LEFT;
 			if (doubleBlackParent->parent)
 			{
 				if (doubleBlackParent->parent->left == doubleBlackParent)
 					parentGrandParentRelationship = LEFT;
+				else
+					parentGrandParentRelationship = RIGHT;
 			}
-			else
-				parentGrandParentRelationship = RIGHT;
 
-			if (doubleBlackParent->getColor() == BLACK)
+			if (doubleBlackParent->_color == BLACK)
 				_redBlackTree_fixDoubleBlack(doubleBlackParent, doubleBlackParent->parent, parentGrandParentRelationship);
 		}
 		else if (siblingColor == RED)
@@ -131,15 +133,15 @@ namespace ft
 			if (parentRelationship != LEFT)
 			{
 				_redBlackTree_rotate_right(doubleBlackParent);
-				sibling->setColor(BLACK);
-				doubleBlackParent->setColor(RED);
+				sibling->_color = BLACK;
+				doubleBlackParent->_color = RED;
 				_redBlackTree_fixDoubleBlack(u_doubleBlack, doubleBlackParent, RIGHT);
 			}
 			if (parentRelationship != RIGHT)
 			{
 				_redBlackTree_rotate_left(doubleBlackParent);
-				sibling->setColor(BLACK);
-				doubleBlackParent->setColor(RED);
+				sibling->_color = BLACK;
+				doubleBlackParent->_color = RED;
 				_redBlackTree_fixDoubleBlack(u_doubleBlack, doubleBlackParent, LEFT);
 			}
 		}

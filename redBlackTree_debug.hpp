@@ -5,15 +5,17 @@
 #include <sstream>
 #include <fstream>
 
-#include "node.hpp"
-#include "pair.hpp"
+#include "_redBlackTree.hpp"
 
-#define DEBUG_MODE true
+#include "../commons/commons.hpp"
+#include "../tools/tools.hpp"
+
+#define DEBUG_MODE false
 
 namespace ft
 {
-
-	std::string _redBlackTree_debug_printDotNode(node_type *node)
+	template <class node_type, class value_compare>
+	std::string redBlackTree<node_type, value_compare>::_redBlackTree_debug_printDotNode(node_type *node)
 	{
 		std::stringstream sstream;
 
@@ -34,7 +36,8 @@ namespace ft
 		return (sstream.str());
 	}
 
-	void _redBlackTree_debug_printDotTree(const std::string &str)
+	template <class node_type, class value_compare>
+	void redBlackTree<node_type, value_compare>::_redBlackTree_debug_printDotTree(const std::string &str)
 	{
 		std::stringstream filename;
 		filename << "tree_output/tree_" << str << "_" << this->_size << ".dot";
@@ -78,7 +81,7 @@ namespace ft
 
 			// Print node + style
 			output_file << _redBlackTree_debug_printDotNode(current_node) << "								";
-			if (current_node->getColor() == RED)
+			if (current_node->_color == RED)
 				output_file << style_node_red << std::endl;
 			else
 				output_file << style_node_black << std::endl;
@@ -89,7 +92,7 @@ namespace ft
 				output_file << _redBlackTree_debug_printDotNode(current_node->left);
 			else
 			{
-				sstream << "NULL_" << current_node->data.first << "_left";
+				sstream << "\"NULL_" << current_node->data.first << "_left\"";
 				newNull_1 = sstream.str();
 				output_file << newNull_1;
 				sstream.str("");
@@ -100,7 +103,7 @@ namespace ft
 				output_file << _redBlackTree_debug_printDotNode(current_node->right);
 			else
 			{
-				sstream << "NULL_" << current_node->data.first << "_right";
+				sstream << "\"NULL_" << current_node->data.first << "_right\"";
 				newNull_2 = sstream.str();
 				output_file << newNull_2;
 				sstream.str("");
@@ -145,7 +148,8 @@ namespace ft
 		return;
 	}
 
-	void _redBlackTree_debug_printNodeData(node_type *node)
+	template <class node_type, class value_compare>
+	void redBlackTree<node_type, value_compare>::_redBlackTree_debug_printNodeData(node_type *node)
 	{
 		if (DEBUG_MODE)
 		{
@@ -164,7 +168,8 @@ namespace ft
 		}
 	}
 
-	void _redBlackTree_debug_printNode(node_type *node)
+	template <class node_type, class value_compare>
+	void redBlackTree<node_type, value_compare>::_redBlackTree_debug_printNode(node_type *node)
 	{
 		if (DEBUG_MODE)
 		{
@@ -177,7 +182,7 @@ namespace ft
 				<< "*---------------" << std::endl;
 			if (node)
 			{
-				if (node->getColor() == RED)
+				if (node->_color == RED)
 					std::cout << "* Color: "
 							  << " RED" << std::endl;
 				else
@@ -210,7 +215,8 @@ namespace ft
 		}
 	}
 
-	void _redBlackTree_debug_printTree(void)
+	template <class node_type, class value_compare>
+	void redBlackTree<node_type, value_compare>::_redBlackTree_debug_printTree(void)
 	{
 		if (DEBUG_MODE)
 		{
@@ -237,7 +243,8 @@ namespace ft
 		}
 	}
 
-	void _redBlackTree_debug_message(const std::string &str) const
+	template <class node_type, class value_compare>
+	void redBlackTree<node_type, value_compare>::_redBlackTree_debug_message(const std::string &str) const
 	{
 		if (DEBUG_MODE)
 			std::cout << "DEBUG: " << str << std::endl;

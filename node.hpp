@@ -12,22 +12,19 @@ namespace ft
 	template <class T>
 	struct Node
 	{
-	private:
-		bool _color;
-
 	public:
-		T data;
+		typedef T value_type;
+
+		bool _color;
+		value_type data;
 
 		Node *left;
 		Node *right;
 		Node *parent;
 
-		bool getColor(void) { return _color; };
-		void setColor(bool color) { this->_color = color; };
-
 		// Constructor with data
 		Node(const T &src = T())
-			: _color(RED),
+			: _color(BLACK),
 			  data(src),
 			  left(NULL),
 			  right(NULL),
